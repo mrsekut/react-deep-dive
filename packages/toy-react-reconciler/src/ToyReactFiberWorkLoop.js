@@ -8,7 +8,18 @@ export function flushSync(internals) {
 }
 
 // UnitOfWorkを実行する
-function performUnitOfWork(fiber, internals) {
+function performUnitOfWork(fiber_, internals) {
+	const fiber = createAndAppendDom(fiber_);
+
+	const childFiber = constructFiberTree(fiber);
+	if (childFiber) {
+		fiber.child = childFiber;
+	}
+	return findNextUnitOfWork(fiber);
+}
+
+// DOMを作成し、親要素に追加する
+function createAndAppendDom(fiber) {
 	if (!fiber.dom) {
 		fiber.dom = createDom(fiber);
 	}
@@ -17,35 +28,38 @@ function performUnitOfWork(fiber, internals) {
 		fiber.parent.dom.appendChild(fiber.dom);
 	}
 
-	// 子要素ごとにfiber treeを構築する
+	return fiber;
+}
+
+function constructFiberTree(fiber) {
 	const elements = fiber.props.children;
-	let index = 0;
-	let prevSibling = null;
+	return createFiberList();
 
-	while (index < elements.length) {
+	// 再帰的に子要素ごとにfiber treeを構築する
+	function createFiberList(index = 0) {
+		if (index >= elements.length) {
+			return null;
+		}
+
 		const element = elements[index];
-
 		const newFiber = {
 			type: element.type,
 			props: element.props,
 			parent: fiber,
 			dom: null,
+			sibling: createFiberList(index + 1),
 		};
 
-		if (index === 0) {
-			fiber.child = newFiber;
-		} else {
-			prevSibling.sibling = newFiber;
-		}
-
-		prevSibling = newFiber;
-		index++;
+		return newFiber;
 	}
+}
 
-	// 次の作業単位を探索する
+// 次の作業単位を探索する関数
+function findNextUnitOfWork(fiber) {
 	if (fiber.child) {
 		return fiber.child;
 	}
+
 	let nextFiber = fiber;
 	while (nextFiber) {
 		if (nextFiber.sibling) {
