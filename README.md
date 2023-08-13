@@ -1,9 +1,11 @@
 # react-deep-dive
 
-2021 年度 KC3（関西情報系学生団体交流会）2 日目で実施された、「[React Deep Dive](https://kc3.me/conf/study/297/)」勉強会のアーカイブリポジトリです。
+このリポジトリは、[react-deep-dive](https://github.com/shuta13/react-deep-dive/tree/2023/main)をフォークして、自分の学習のために少し修正を加えたものです。
 
-[はじめに](./docs/はじめに.md) から順に読み進めて下さい。
+[2023/8/11 react-deep-dive をやる](https://scrapbox.io/mrsekut-p/2023%2F8%2F11_react-deep-diveをやる)
 
 ## License
 
 MIT License
+
+オリジナルのライセンスを維持しています。詳細はオリジナルのリポジトリを参照してください。
