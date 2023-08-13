@@ -1,5 +1,7 @@
 "use strict";
 
+import { flushSync } from "toy-react-reconciler/src/ToyReactFiberWorkLoop";
+
 const internals = {
 	nextUnitOfWork: null,
 	currentRoot: null,
@@ -10,25 +12,16 @@ const internals = {
 };
 
 export function render(element, container) {
-	const dom =
-		element.type === "TEXT_ELEMENT"
-			? document.createTextNode("")
-			: document.createElement(element.type);
+	const fiberRoot = {
+		dom: container,
+		props: {
+			children: [element],
+		},
+	};
 
-	// 属性を更新
-	Object.keys(element.props)
-		.filter((key) => key !== "children")
-		.forEach((name) => {
-			dom[name] = element.props[name];
-		});
-
-	// childrenを再帰的にレンダリング
-	element.props.children.forEach((child) => {
-		render(child, dom);
-	});
-
-	// containerにdomを追加
-	container.appendChild(dom);
+	// fiber treeのrootをnext unit of workに設定して、renderを開始する
+	internals.nextUnitOfWork = fiberRoot;
+	flushSync(internals);
 }
 
 export function useStateImpl(initial) {}
