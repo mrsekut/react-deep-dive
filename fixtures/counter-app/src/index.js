@@ -1,8 +1,9 @@
-'use strict';
+"use strict";
 
-const ToyReact = require('toy-react');
-const ToyReactDOM = require('toy-react-dom');
+const ToyReact = require("toy-react");
+const ToyReactDOM = require("toy-react-dom");
 
-const { App } = require('./components/App');
+// const { App } = require('./components/App');
 
-ToyReactDOM.render(<App />, document.getElementById('root'));
+ToyReactDOM.render(<h1>hello world</h1>, document.getElementById("root"));
+// ToyReactDOM.render(<App />, document.getElementById('root'));
